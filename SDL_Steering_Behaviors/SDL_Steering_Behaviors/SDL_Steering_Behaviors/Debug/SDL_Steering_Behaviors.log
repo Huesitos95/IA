@@ -1,5 +1,25 @@
-﻿  main.cpp
+﻿  utils .cpp
+  SteeringBehavior.cpp
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(183): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(213): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(215): warning C4018: '<': signed/unsigned mismatch
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(217): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(234): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(238): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pmorales\ia\sdl_steering_behaviors\src\steeringbehavior.cpp(243): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  SDL_SimpleApp.cpp
+  SceneKinematicWander.cpp
+  SceneKinematicSeek .cpp
+  SceneKinematicPursue.cpp
+  SceneKinematicPerimeterAvoidance.cpp
+  SceneKinematicFlocking.cpp
+c:\users\pmorales\ia\sdl_steering_behaviors\src\scenekinematicflocking.cpp(12): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  SceneKinematicFlee.cpp
+  SceneKinematicEvade.cpp
   SceneKinematicCombination.cpp
-  Generando código...
-  SDL_Steering_Behaviors.vcxproj -> C:\Users\oinu_\Desktop\IA\SDL_Steering_Behaviors\\bin\SDL_Steering_Behaviors.exe
-  SDL_Steering_Behaviors.vcxproj -> C:\Users\oinu_\Desktop\IA\SDL_Steering_Behaviors\\bin\SDL_Steering_Behaviors.pdb (Partial PDB)
+  SceneKinematicArrive.cpp
+  main.cpp
+  Agent.cpp
+  Generating Code...
+  SDL_Steering_Behaviors.vcxproj -> C:\Users\pmorales\IA\SDL_Steering_Behaviors\\bin\SDL_Steering_Behaviors.exe
+  SDL_Steering_Behaviors.vcxproj -> C:\Users\pmorales\IA\SDL_Steering_Behaviors\\bin\SDL_Steering_Behaviors.pdb (Partial PDB)

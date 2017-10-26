@@ -44,7 +44,6 @@ Vector2D SteeringBehavior::KinematicFlee(Agent *agent, Agent *target, float dtim
 /* Add here your own Steering Behavior functions definitions */
 
 //Seek
-//Algoritmo implementado
 Vector2D SteeringBehavior::Seek(Agent *agent, Vector2D target, float dtime)
 {
 	Vector2D DesiredVelocity = target - agent->position;
@@ -66,7 +65,9 @@ Vector2D SteeringBehavior::Flee(Agent *agent, Vector2D target, float dtime)
 	Vector2D DesiredVelocity = agent->position - target;
 	DesiredVelocity.Normalize();
 	DesiredVelocity *= agent->max_velocity;
-	return DesiredVelocity;
+	Vector2D SteeringForce = (DesiredVelocity - agent->velocity);
+	SteeringForce /= agent->max_velocity;
+	return SteeringForce * agent->max_force;
 }
 
 Vector2D SteeringBehavior::Flee(Agent *agent, Agent *target, float dtime)
@@ -122,7 +123,11 @@ Vector2D SteeringBehavior::Pursue(Agent *agent, Vector2D target, float dtime)
 Vector2D SteeringBehavior::Pursue(Agent *agent, Agent *target, float dtime)
 {
 	Vector2D DistanceToTarget = target->position - agent->position;
-	float t = hypot(DistanceToTarget.x, DistanceToTarget.y) / agent->max_velocity;
+	if (agent->velocity.Length() == 0)
+	{
+		return Seek(agent, target->position, dtime);
+	}
+	float t = hypot(DistanceToTarget.x, DistanceToTarget.y) / agent->velocity.Length();
 	Vector2D TargetPosition = target->position + (target->getVelocity() * t);
 	return Seek(agent, TargetPosition, dtime);
 }
@@ -136,7 +141,11 @@ Vector2D SteeringBehavior::Evade(Agent *agent, Vector2D target, float dtime)
 Vector2D SteeringBehavior::Evade(Agent *agent, Agent *target, float dtime)
 {
 	Vector2D DistanceToTarget = target->position - agent->position;
-	float t = hypot(DistanceToTarget.x, DistanceToTarget.y) / agent->max_velocity;
+	if (agent->velocity.Length() == 0)
+	{
+		return Seek(agent, target->position, dtime);
+	}
+	float t = hypot(DistanceToTarget.x, DistanceToTarget.y) / agent->velocity.Length();
 	Vector2D TargetPosition = target->position + (target->getVelocity() * t);
 	return Flee(agent, TargetPosition, dtime);
 }
