@@ -32,6 +32,10 @@ SteeringBehavior * Agent::Behavior()
 	return steering_behavior;
 }
 
+PathFinding * Agent::Algorithm() {
+	return algorithm;
+}
+
 Vector2D Agent::getPosition()
 {
 	return position;

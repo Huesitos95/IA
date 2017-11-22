@@ -9,6 +9,7 @@ ScenePathFinding::ScenePathFinding()
 	num_cell_x = SRC_WIDTH / CELL_SIZE;
 	num_cell_y = SRC_HEIGHT / CELL_SIZE;
 	initMaze();
+	initGraph();
 	loadTextures("../res/maze.png", "../res/coin.png");
 
 	srand((unsigned int)time(NULL));
@@ -24,15 +25,18 @@ ScenePathFinding::ScenePathFinding()
 		rand_cell = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
 	agents[0]->setPosition(cell2pix(rand_cell));
 
+	
 	// set the coin in a random cell (but at least 3 cells far from the agent)
 	coinPosition = Vector2D(-1,-1);
 	while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3)) 
 		coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
 	
+	BFS();
 	// PathFollowing next Target
 	currentTarget = Vector2D(0, 0);
 	currentTargetIndex = -1;
 
+	
 }
 
 ScenePathFinding::~ScenePathFinding()
@@ -45,6 +49,14 @@ ScenePathFinding::~ScenePathFinding()
 	for (int i = 0; i < (int)agents.size(); i++)
 	{
 		delete agents[i];
+	}
+
+	for (int i = 0; i < num_cell_x; i++)
+	{
+		for (int j = 0; j < num_cell_y; j++)
+		{
+			delete nodes[i][j];
+		}
 	}
 }
 
@@ -95,12 +107,14 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 						coinPosition = Vector2D(-1, -1);
 						while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, pix2cell(agents[0]->getPosition()))<3))
 							coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
+						
 					}
 				}
 				else
 				{
-					Vector2D steering_force = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);
-					agents[0]->update(steering_force, dtime, event);
+					//Vector2D steering_force = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);
+					Vector2D algorithm = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);
+					agents[0]->update(algorithm, dtime, event);
 				}
 				return;
 			}
@@ -114,7 +128,13 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	else
 	{
 		agents[0]->update(Vector2D(0,0), dtime, event);
+		/*Vector2D algorithm = agents[0]->Behavior()->Seek(agents[0], coinPosition, dtime);
+		agents[0]->update(algorithm, dtime, event);*/
+
 	}
+
+
+
 }
 
 void ScenePathFinding::draw()
@@ -150,7 +170,7 @@ void ScenePathFinding::draw()
 
 const char* ScenePathFinding::getTitle()
 {
-	return "SDL Steering Behaviors :: PathFinding1 Demo";
+	return "SDL Steering Behaviors :: BFS Demo";
 }
 
 void ScenePathFinding::drawMaze()
@@ -278,6 +298,104 @@ void ScenePathFinding::initMaze()
 
 }
 
+
+void ScenePathFinding::initGraph() {
+
+	for (int i = 0; i < num_cell_x; i++)
+	{
+		vector<Node*> node_col(num_cell_y, nullptr);
+		nodes.push_back(node_col);
+	}
+
+	for (int i = 0; i < num_cell_x; i++)
+	{
+
+		for (int j = 0; j < num_cell_y; j++)
+		{
+
+
+			if (terrain[i][j] != 0) {
+
+				Node *node = new Node(Vector2D(i, j));
+				nodes[i][j] = node;
+
+			}
+
+			if (nodes[i][j] != nullptr) // Que el node no sigui una paret o no existeixi
+			{
+				if (i > 0)
+				{
+					if (nodes[i - 1][j] != nullptr) // Que el node ESQUERRA no sigui una paret o no existeixi
+					{
+						nodes[i][j]->veiEsquerra = nodes[i - 1][j]; // VINCULEM ELS 2 NODES, COM A VEI
+					}
+				}
+
+				if (i < num_cell_x - 1)
+				{
+					if (nodes[i + 1][j] != nullptr) // Que el node DRETA no sigui una paret o no existeixi
+					{
+						nodes[i][j]->veiDreta = nodes[i + 1][j]; // VINCULEM ELS 2 NODES, COM A VEI
+					}
+				}
+
+				if (j < num_cell_y - 1)
+				{
+					if (nodes[i][j + 1] != nullptr) // Que el node ABAIX no sigui una paret o no existeixi
+					{
+						nodes[i][j]->veiAbaix = nodes[i][j + 1]; // VINCULEM ELS 2 NODES, COM A VEI
+					}
+				}
+
+				if (j > 0)
+				{
+					if (nodes[i][j - 1] != nullptr) // Que el node ADALT no sigui una paret o no existeixi
+					{
+						nodes[i][j]->veiAbaix = nodes[i][j - 1]; // VINCULEM ELS 2 NODES, COM A VEI
+					}
+				}
+			}
+		}
+	}
+	// TUNNELS
+	nodes[0][10]->veiEsquerra = nodes[num_cell_x - 1][10]; // Primer tunels esquerra-dreta
+	nodes[0][11]->veiEsquerra = nodes[num_cell_x - 1][11];
+	nodes[0][12]->veiEsquerra = nodes[num_cell_x - 1][12];
+
+	nodes[num_cell_x - 1][10]->veiDreta = nodes[0][10]; // Tunels dreta-esquerra
+	nodes[num_cell_x - 1][11]->veiDreta = nodes[0][11];
+	nodes[num_cell_x - 1][12]->veiDreta = nodes[0][12];
+	
+}
+
+//void ScenePathFinding::Bridge() {
+//
+//	if (currentTarget == cell2pix(Vector2D{ 0,10 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 39,10 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 0,10 }));
+//	}
+//	else if (currentTarget == cell2pix(Vector2D{ 0,11 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 39,11 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 0,11 }));
+//	}
+//	else if (currentTarget == cell2pix(Vector2D{ 0,12 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 39,12 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 0,12 }));
+//	}
+//	else if (currentTarget == cell2pix(Vector2D{ 39,10 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 0,10 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 39,10 }));
+//	}
+//	else if (currentTarget == cell2pix(Vector2D{ 39,11 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 0,11 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 39,11 }));
+//	}
+//	else if (currentTarget == cell2pix(Vector2D{ 39,12 })) {
+//		if (path.points[currentTargetIndex - 1] == cell2pix(Vector2D{ 0,12 }))
+//			agents[0]->setPosition(cell2pix(Vector2D{ 39,12 }));
+//	}
+//}
+
 bool ScenePathFinding::loadTextures(char* filename_bg, char* filename_coin)
 {
 	SDL_Surface *image = IMG_Load(filename_bg);
@@ -320,3 +438,100 @@ bool ScenePathFinding::isValidCell(Vector2D cell)
 		return false;
 	return !(terrain[(unsigned int)cell.x][(unsigned int)cell.y] == 0);
 }
+
+//función para checkear si un nodo concreto está contenido en el vector
+bool ScenePathFinding::CheckVector(Node* node, std::vector<Node*> vec) {
+	for (unsigned int i = 0; i < vec.size(); i++) {
+		if (vec[i] == node)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void ScenePathFinding::BFS()
+{
+
+	//Iniciem la frontera amb el node del agent
+	frontera.push_back(nodes[pix2cell(agents[0]->getPosition()).x][pix2cell(agents[0]->getPosition()).y]);
+
+	while (frontera.size() != 0)
+	{
+		// agafem el node de la frontera
+		Node * actual = frontera.front();
+
+		//Comprobar si estem a la meta de la moneda
+		if (actual->position == coinPosition)
+		{
+			// hem arribat, tanquem el bucle
+			break;
+		}
+		else // NO estem al objectiu, recorrem veins
+		{
+			if (CheckVector(actual,visited))
+			{
+				frontera.erase(frontera.begin());
+			}
+			else
+			{
+				frontera.erase(frontera.begin());
+
+				if (actual->veiAdalt != nullptr && !CheckVector(actual->veiAdalt, visited))
+				{
+					actual->veiAdalt->fromNode = actual;
+					frontera.push_back(actual->veiAdalt);
+					
+				}
+
+				if (actual->veiDreta != nullptr && !CheckVector(actual->veiDreta, visited))
+				{
+					actual->veiDreta->fromNode = actual;
+					frontera.push_back(actual->veiDreta);
+					
+				}
+
+				if (actual->veiEsquerra != nullptr && !CheckVector(actual->veiEsquerra, visited))
+				{
+					actual->veiEsquerra->fromNode = actual;
+					frontera.push_back(actual->veiEsquerra);
+					
+				}
+
+				if (actual->veiAbaix != nullptr && !CheckVector(actual->veiAbaix, visited))
+				{
+					actual->veiAbaix->fromNode = actual;
+					frontera.push_back(actual->veiAbaix);
+					
+				}
+
+				visited.push_back(actual);
+			}
+		}
+	}
+
+	if (!frontera.empty())
+	{
+		//montem el cami a seguir a la inversa.
+		Node * actual = frontera.front();
+
+
+		reversepath.push_back(actual);
+		Vector2D pos = pix2cell(agents[0]->getPosition());
+		while (actual->position != pos)
+		{
+			// Tornar al fromNode i posarlo com a objectiu actual
+			actual = actual->fromNode;
+			// Afegirlo al reversePath que hem de seguir
+			reversepath.push_back(actual);
+		}
+
+	}
+		
+	for (unsigned int i = 0; i < reversepath.size(); i++)
+	{
+		path.points.insert(path.points.begin(), cell2pix(reversepath[i]->position));
+	}
+}
+
+

@@ -7,14 +7,17 @@
 #include "Vector2D.h"
 #include "utils.h"
 #include "SteeringBehavior.h"
+#include "PathFinding.h"
 
 
 class Agent
 {
 	friend class SteeringBehavior;
+	friend class PathFinding;
 
 private:
 	SteeringBehavior *steering_behavior;
+	PathFinding *algorithm;
 	Vector2D position;
 	Vector2D velocity;
 	Vector2D target;
@@ -36,6 +39,7 @@ public:
 	Agent();
 	~Agent();
 	SteeringBehavior *Behavior();
+	PathFinding *Algorithm();
 	Vector2D getPosition();
 	Vector2D getTarget();
 	Vector2D getVelocity();

@@ -1,2 +1,30 @@
-﻿  SDL_Pathfinding.vcxproj -> C:\Users\pmorales\IA\SDL_Pathfinding\SDL_Pathfinding\\bin\SDL_Pathfinding.exe
-  SDL_Pathfinding.vcxproj -> C:\Users\pmorales\IA\SDL_Pathfinding\SDL_Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)
+﻿  ScenePathFindingDijkstra.cpp
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(335): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(336): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(337): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(338): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(345): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(346): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(347): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(348): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(355): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(356): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(357): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(358): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(365): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(366): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(367): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(368): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(615): warning C4018: '<': no coinciden signed/unsigned
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(617): warning C4018: '<': no coinciden signed/unsigned
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(634): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(635): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(641): warning C4018: '<': no coinciden signed/unsigned
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(643): warning C4244: 'argumento': conversión de 'float' a 'const unsigned int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(644): warning C4244: 'argumento': conversión de 'float' a 'const unsigned int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(646): warning C4244: 'argumento': conversión de 'float' a 'const unsigned int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(648): warning C4244: 'argumento': conversión de 'float' a 'const unsigned int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(658): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\pau\sdl_pathfinding\src\scenepathfindingdijkstra.cpp(659): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+  SDL_Pathfinding.vcxproj -> C:\Users\Pau\SDL_Pathfinding\\bin\SDL_Pathfinding.exe
+  SDL_Pathfinding.vcxproj -> C:\Users\Pau\SDL_Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)

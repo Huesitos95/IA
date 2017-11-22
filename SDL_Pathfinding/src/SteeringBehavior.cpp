@@ -50,3 +50,5 @@ Vector2D SteeringBehavior::Arrive(Agent *agent, Agent *target, int slow_radius, 
 {
 	return Arrive(agent, target->position, slow_radius, dtime);
 }
+
+
