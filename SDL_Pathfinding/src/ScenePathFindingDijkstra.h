@@ -51,4 +51,9 @@ private:
 
 	void Dijkstra(Node start, Node objectiu);
 	void SetCosts();
+
+	int minimNodes = 100000;
+	int contador, maximNodes, suma, times;
+	float mitjaNodes;
+	void caculNodes();
 };

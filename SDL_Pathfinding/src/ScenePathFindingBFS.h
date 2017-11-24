@@ -47,4 +47,9 @@ private:
 	bool principi = false;
 
 	void BFS(Node sortida, Node entrada);
+
+	int minimNodes = 100000;
+	int contador, maximNodes, suma, times;
+	float mitjaNodes;
+	void caculNodes();
 };

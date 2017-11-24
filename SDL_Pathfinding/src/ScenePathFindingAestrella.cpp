@@ -6,7 +6,7 @@ using namespace std;
 ScenePathFindingAestrella::ScenePathFindingAestrella()
 {
 	draw_grid = false;
-	
+	start = false;
 
 	num_cell_x = SRC_WIDTH / CELL_SIZE;
 	num_cell_y = SRC_HEIGHT / CELL_SIZE;
@@ -61,7 +61,8 @@ void ScenePathFindingAestrella::update(float dtime, SDL_Event *event)
 			draw_grid = !draw_grid;
 		if (event->key.keysym.scancode == SDL_SCANCODE_Z)
 		{
-			cout << "algroismeeee" << endl;
+			start = true;
+			finished = false;
 		}
 
 		break;
@@ -83,6 +84,29 @@ void ScenePathFindingAestrella::update(float dtime, SDL_Event *event)
 	default:
 		break;
 	}
+
+	if (start) {
+		inici.position.x = pix2cell(agents[0]->getPosition()).x;
+		inici.position.y = pix2cell(agents[0]->getPosition()).y;
+		objectiu.position.x = coinPosition.x;
+		objectiu.position.y = coinPosition.y;
+		cout << "start" << endl;
+		AEstrella(inici, objectiu);
+		start = false;
+	}
+
+	if (finished) {
+		inici.position.x = pix2cell(agents[0]->getPosition()).x;
+		inici.position.y = pix2cell(agents[0]->getPosition()).y;
+		objectiu.position.x = coinPosition.x;
+		objectiu.position.y = coinPosition.y;
+		cout << "start" << endl;
+		AEstrella(inici, objectiu);
+		finished = false;
+	}
+
+
+	
 	
 	if ((currentTargetIndex == -1) && (path.points.size()>0))
 		currentTargetIndex = 0;
@@ -108,7 +132,7 @@ void ScenePathFindingAestrella::update(float dtime, SDL_Event *event)
 				
 							coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
 					}
-				
+					finished = true;
 				}
 				else
 				{
@@ -572,6 +596,111 @@ bool ScenePathFindingAestrella::isValidCell(Vector2D cell)
 	if ((cell.x < 0) || (cell.y < 0) || (cell.x >= terrain.size()) || (cell.y >= terrain[0].size()) )
 		return false;
 	return !(terrain[(unsigned int)cell.x][(unsigned int)cell.y] == 0);
+}
+
+void ScenePathFindingAestrella::AEstrella(Node inici, Node final)
+{
+	priority_queue<Node, vector<Node>, LessThanByPriority> frontera;
+	contador = 0;
+	int newCost;
+	from.clear();
+	from.resize(num_cell_x, vector<Node>(num_cell_y));
+	SetCosts();
+	frontera.push(inici);
+	vector<vector<bool>> visitades(terrain.size(), vector<bool>(terrain[0].size()));
+	for (int i = 0; i < terrain.size(); i++) {
+		for (int j = 0; j < terrain[0].size(); j++) {
+			visitades[i][j] = false;
+		}
+	}
+	for (int i = 0; i < num_cell_x; i++) {
+		for (int j = 0; j < num_cell_y; j++) {
+			from[i][j].accumulat = -1;
+		}
+	}
+	path.points.clear();
+
+	while (!frontera.empty()) {
+
+		Node nodeActual = frontera.top();
+		currX = nodeActual.position.x;
+		currY = nodeActual.position.y;
+		nodeActual.fromNode = Vector2D(-1, -1);
+		frontera.pop();
+		std::vector<Node> neighbors = graph.getConnections(nodeActual);
+		from[currX][currY].visited = true;
+
+		for (int i = 0; i < neighbors.size(); i++) {
+			newCost = from[currX][currY].accumulat + from[neighbors[i].position.x][neighbors[i].position.y].cost;
+			if (from[neighbors[i].position.x][neighbors[i].position.y].accumulat == -1 || newCost < from[neighbors[i].position.x][neighbors[i].position.y].accumulat) {
+				from[neighbors[i].position.x][neighbors[i].position.y].accumulat = newCost;
+				neighbors[i].heuristic_distance = pow((final.position.x - neighbors[i].position.x), 2) + pow((final.position.y - neighbors[i].position.y), 2);
+				neighbors[i].priority = newCost + neighbors[i].heuristic_distance;
+				from[neighbors[i].position.x][neighbors[i].position.y].fromNode = Vector2D(nodeActual.position.x, nodeActual.position.y);
+				frontera.push(neighbors[i]);
+				contador++;
+				//cout << "x: " << neighbors[i].x << " y: " << neighbors[i].y << "cost: " << cameFrom[neighbors[i].x][neighbors[i].y].acumulatedCost << endl;
+				if (Vector2D(neighbors[i].position.x, neighbors[i].position.y) == Vector2D(final.position.x, final.position.y)) {
+					nodeActual = final;
+					path.points.push_back(cell2pix(Vector2D(nodeActual.position.x, nodeActual.position.y)));
+					while (Vector2D(nodeActual.position.x, nodeActual.position.y) != Vector2D(inici.position.x, inici.position.y)) {
+						currX = nodeActual.position.x;
+						currY = nodeActual.position.y;
+						nodeActual.position.x = from[currX][currY].fromNode.x;
+						//std::cout << nodeActual.x << endl;
+						nodeActual.position.y = from[currX][currY].fromNode.y;
+						//std::cout << nodeActual.y << endl;
+						path.points.insert(path.points.begin(), cell2pix(Vector2D(nodeActual.position.x, nodeActual.position.y)));
+					}
+					path.points.insert(path.points.begin(), cell2pix(Vector2D(inici.position.x, final.position.y)));
+					std::cout << "got it!" << endl;
+					times++;
+					caculNodes();
+					return;
+				}
+			}
+		}
+	}
+
+
+}
+
+
+void ScenePathFindingAestrella::SetCosts()
+{
+	for (int i = 15; i < num_cell_x - 15; i++) {
+		for (int j = 7; j < num_cell_y - 7; j++) {
+			from[i][j].cost = 50;
+		}
+	}
+
+}
+
+void ScenePathFindingAestrella::caculNodes()
+{
+	if (contador < minimNodes) {
+		minimNodes = contador;
+	}
+	if (contador > maximNodes) {
+		int temp = maximNodes;
+		maximNodes = contador;
+		if (temp < minimNodes) {
+			minimNodes = temp;
+		}
+	}
+	if (minimNodes == 0) {
+		minimNodes = 1000;
+	}
+	suma += contador;
+	mitjaNodes = suma / times;
+	std::cout << "A* statistics: " << endl;
+	if (minimNodes == 1000) {
+		cout << "min: " << 0 << endl;
+	}
+	else cout << "min: " << minimNodes << endl;
+	cout << "max: " << maximNodes << endl;
+	cout << "mitja: " << mitjaNodes << endl;
+
 }
 
 

@@ -40,4 +40,16 @@ private:
 	bool isValidCell(Vector2D cell);
 	Graph graph;
 
+	vector<vector<Node>>From;
+	Node inici, objectiu;
+	int currentX, currentY;
+	bool start = false;
+	bool principi = false;
+
+	void GBFS(Node sortida, Node entrada);
+
+	int minimNodes = 100000;
+	int contador, maximNodes, suma, times;
+	float mitjaNodes;
+	void caculNodes();
 };

@@ -595,7 +595,7 @@ bool ScenePathFindingBFS::isValidCell(Vector2D cell)
 
 void ScenePathFindingBFS::BFS(Node objectiu, Node start){
 
-
+	contador = 0;
 	queue<Node> frontera;
 	From.clear();
 	From.resize(num_cell_x, std::vector<Node>(num_cell_y));
@@ -626,7 +626,7 @@ void ScenePathFindingBFS::BFS(Node objectiu, Node start){
 					From[neighbors[i].position.x][neighbors[i].position.y].visited = true;
 					From[neighbors[i].position.x][neighbors[i].position.y].fromNode = Vector2D(nodeActual.position.x, nodeActual.position.y); //Passem d'on venim
 					frontera.push(neighbors[i]);
-				
+					contador++;
 					//std::cout << "From node -> x: " << cameFrom2[neighbors[i].x][neighbors[i].y].fromNode.x << "  y: " << cameFrom2[neighbors[i].x][neighbors[i].y].fromNode.y << endl;
 					//std::cout << "To node -> x: " << neighbors[i].x << " y: " << neighbors[i].y << endl;
 					if (Vector2D(neighbors[i].position.x, neighbors[i].position.y) == Vector2D(objectiu.position.x, objectiu.position.y)) {
@@ -644,8 +644,8 @@ void ScenePathFindingBFS::BFS(Node objectiu, Node start){
 						path.points.insert(path.points.begin(), cell2pix(Vector2D(start.position.x, start.position.y)));
 						std::cout << "got it!" << endl;
 						path.points.push_back(cell2pix(Vector2D(objectiu.position.x, objectiu.position.y)));
-						//times++; //Per fer la mitjana
-						//Nodes();
+						times++; //Per fer la mitjana
+						caculNodes();
 						return;
 					}
 				}
@@ -654,30 +654,30 @@ void ScenePathFindingBFS::BFS(Node objectiu, Node start){
 	}
 }
 
-//void ScenePathFinding::Nodes()
-//{
-//	if (count < minNodes) {
-//		minNodes = count;
-//	}
-//	if (count > maxNodes) {
-//		int temp = maxNodes;
-//		maxNodes = count;
-//		if (temp < minNodes) {
-//			minNodes = temp;
-//		}
-//	}
-//	if (minNodes == 0) {
-//		minNodes = 1000;
-//	}
-//	sum += count;
-//	mitjaNodes = sum / times;
-//	std::cout << "Breath First Search statistics: " << endl;
-//	if (minNodes == 1000) {
-//		cout << "min: " << 0 << endl;
-//	}
-//	else cout << "min: " << minNodes << endl;
-//	cout << "max: " << maxNodes << endl;
-//	cout << "mitja: " << mitjaNodes << endl;
-//}
+void ScenePathFindingBFS::caculNodes()
+{
+	if (contador < minimNodes) {
+		minimNodes = contador;
+	}
 
+	if (contador > maximNodes) {
+		int temp = maximNodes;
+		maximNodes = contador;
+		if (temp < minimNodes) {
+			minimNodes = temp;
+		}
+	}
+	if (minimNodes == 0) {
+		minimNodes = 1000;
+	}
+	suma += contador;
+	mitjaNodes = suma / times;
+	std::cout << "Breath First Search statistics: " << endl;
+	if (minimNodes == 1000) {
+		cout << "min: " << 0 << endl;
+	}
+	else cout << "min: " << minimNodes << endl;
+	cout << "max: " << maximNodes << endl;
+	cout << "mitja: " << mitjaNodes << endl;
+}
 

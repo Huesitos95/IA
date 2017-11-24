@@ -39,6 +39,21 @@ private:
 	Vector2D pix2cell(Vector2D pix);
 	bool isValidCell(Vector2D cell);
 	Graph graph;
+	void AEstrella(Node inici, Node final);
+	int currX, currY;
+	Node inici, objectiu;
+	bool start = false;
+	bool finished = false;
+	std::vector< std::vector<Node> > from;
+	int nodesMin = 100000;
+
+	void SetCosts();
+
+	int minimNodes = 100000;
+	int contador, maximNodes, suma, times;
+	float mitjaNodes;
+	void caculNodes();
+
 
 	
 };

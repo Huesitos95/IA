@@ -198,12 +198,16 @@ void ScenePathFindingDijkstra::drawMaze()
 	
 	if (draw_grid)
 	{
+		SDL_Rect rect = { 0 * CELL_SIZE, 0 * CELL_SIZE, 40 * CELL_SIZE, CELL_SIZE * 24 };
+
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 102, 204, 0, 255);
+		SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &rect);
 		
-		SDL_Rect rect = { 15*CELL_SIZE, 9*CELL_SIZE, 9*CELL_SIZE, 32*8 };
-		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 255, 255, 255);
+		rect = { 15*CELL_SIZE, 9*CELL_SIZE, 10*CELL_SIZE, CELL_SIZE *4 };
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 102, 51, 0, 255);
 		SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &rect);
 
-		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 51, 25, 255);
 		for (unsigned int i = 0; i < maze_rects.size(); i++)
 			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &maze_rects[i]);
 	}
@@ -605,7 +609,7 @@ bool ScenePathFindingDijkstra::isValidCell(Vector2D cell)
 void ScenePathFindingDijkstra::Dijkstra(Node start, Node objectiu)
 {
 	priority_queue<Node, vector<Node>,LessThanByCost> frontera;
-	int contador = 0; // Per fer els minims i maxims d'estadistiques
+	contador = 0; // Per fer els minims i maxims d'estadistiques
 	int CostActual;
 	From.clear();
 	From.resize(num_cell_x,vector<Node>(num_cell_y));
@@ -665,6 +669,8 @@ void ScenePathFindingDijkstra::Dijkstra(Node start, Node objectiu)
 					}
 					path.points.insert(path.points.begin(), cell2pix(Vector2D(start.position.x, start.position.y)));
 					cout << "got it!" << endl;
+					times++;
+					caculNodes();
 					return;
 				}
 			}
@@ -674,11 +680,46 @@ void ScenePathFindingDijkstra::Dijkstra(Node start, Node objectiu)
 
 void ScenePathFindingDijkstra::SetCosts()
 {
-	// 5 aigua, 10 pedra
-	for (int i = 15; i < num_cell_x - 15; i++) {
-		for (int j = 7; j < num_cell_y - 7; j++) {
-			From[i][j].cost = 5;
+	//10 per a montanya
+	for (int i = 15; i < 25; i++) {
+		for (int j = 9; j < 13; j++) {
+			From[i][j].cost = 10;
 		}
 	}
+
+//	//4 per a aigua
+//	for (int i = ; i < ; i++) {
+//
+//		for (int j = ; j < ; j++) {
+//			From[i][j].cost = 4;
+//		}
+//	}
 }
+
+void ScenePathFindingDijkstra::caculNodes()
+{
+	if (contador < minimNodes) {
+		minimNodes = contador;
+	}
+	if (contador > maximNodes) {
+		int temp = maximNodes;
+		maximNodes = contador;
+		if (temp < minimNodes) {
+			minimNodes = temp;
+		}
+	}
+	if (minimNodes == 0) {
+		minimNodes = 1000;
+	}
+	suma += contador;
+	mitjaNodes = suma / times;
+	std::cout << "Dijkstra statistics: " << endl;
+	if (minimNodes == 1000) {
+		cout << "min: " << 0 << endl;
+	}
+	else cout << "min: " << minimNodes << endl;
+	cout << "max: " << maximNodes << endl;
+	cout << "mitja: " << mitjaNodes << endl;
+}
+
 
